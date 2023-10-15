@@ -38,7 +38,7 @@ void setup() {
   testCalibration();
 
   /*
-   * LAB STEP 5
+   * LAB STEP 6
    * Initialize all FSM variables
    */
   lxb = 0;
