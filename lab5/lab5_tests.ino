@@ -138,9 +138,9 @@ bool testTransition(state startState,
  */
 const state testStatesIn[0] = {};
 const state testStatesOut[0] = {};
-const state_inputs testInput[0] = {};
-const state_vars testInVars[0] = {};
-const state_vars testOutVars[0] = {};
+const state_inputs testInputs[0] = {};
+const state_vars testVarsIn[0] = {};
+const state_vars testVarsOut[0] = {};
 const int numTests = 0;
 
 /*
@@ -150,7 +150,7 @@ bool testAllTests() {
   for (int i = 0; i < numTests; i++) {
     Serial.print("Running test ");
     Serial.println(i);
-    if (!testTransition(testStatesIn[i], testStatesOut[i], testInput[i], testInVars[i], testOutVars[i], true)) {
+    if (!testTransition(testStatesIn[i], testStatesOut[i], testInputs[i], testVarsIn[i], testVarsOut[i], true)) {
       return false;
     }
     Serial.println();
