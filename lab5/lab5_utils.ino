@@ -31,14 +31,14 @@ void calibrate() {
   delay(400);
   while(true) {
     Serial.println("Capacitive sensing:");
+    Serial.print("6: " );
+    Serial.println(s6.capacitiveSensorRaw(10));
     Serial.print("7:  ");
     Serial.println(s7.capacitiveSensorRaw(10));
     Serial.print("8:  ");
     Serial.println(s8.capacitiveSensorRaw(10));
     Serial.print("9:  ");
     Serial.println(s9.capacitiveSensorRaw(10));
-    Serial.print("10: " );
-    Serial.println(s10.capacitiveSensorRaw(10));
     Serial.println();
     if (i == scrollLen) {
       i = 0;
@@ -81,6 +81,9 @@ void testCalibration() {
     for(int i = 0; i < 4; i++) {
       int capReading;
       switch(capSensors[i]) {
+        case 6:
+          capReading = s6.capacitiveSensorRaw(10);
+          break;
         case 7:
           capReading = s7.capacitiveSensorRaw(10);
           break;
@@ -89,9 +92,6 @@ void testCalibration() {
           break;
         case 9:
           capReading = s9.capacitiveSensorRaw(10);
-          break;
-        case 10:
-          capReading = s10.capacitiveSensorRaw(10);
           break;
         default:
           break;        
@@ -114,6 +114,9 @@ void updateInputs() {
   for(int i = 0; i < 4; i++) {
     int capReading;
     switch(capSensors[i]) {
+      case 6:
+        capReading = s6.capacitiveSensorRaw(10);
+        break;
       case 7:
         capReading = s7.capacitiveSensorRaw(10);
         break;
@@ -122,9 +125,6 @@ void updateInputs() {
         break;
       case 9:
         capReading = s9.capacitiveSensorRaw(10);
-        break;
-      case 10:
-        capReading = s10.capacitiveSensorRaw(10);
         break;
       default:
         break;        
