@@ -5,12 +5,12 @@ int capSensors[4];
 int thresholds[4];
 
 /*
- * Initialize capsensors on pins 7, 8, 9, 10 with 11 being the driving pin for all
+ * Initialize capsensors on pins 6, 7, 8, 9 with 10 being the driving pin for all
  */
-CapacitiveSensor s7 = CapacitiveSensor(11, 7);
-CapacitiveSensor s8 = CapacitiveSensor(11, 8);
-CapacitiveSensor s9 = CapacitiveSensor(11, 9);
-CapacitiveSensor s10 = CapacitiveSensor(11, 10);
+CapacitiveSensor s6 = CapacitiveSensor(10, 6);
+CapacitiveSensor s7 = CapacitiveSensor(10, 7);
+CapacitiveSensor s8 = CapacitiveSensor(10, 8);
+CapacitiveSensor s9 = CapacitiveSensor(10, 9);
 
 /*
  * Type (enum and struct) definitions for state, orientation,
