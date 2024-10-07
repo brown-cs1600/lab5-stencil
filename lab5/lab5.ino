@@ -21,7 +21,7 @@ void setup() {
    * LAB STEP 4b
    */
   calibrate();
-  // Change to 7, 8, 9, 10 based on calibration
+  // Change to 6, 7, 8, 9 based on calibration
   capSensors[UP] = 0;
   capSensors[RIGHT] = 0;
   capSensors[DOWN] = 0;
