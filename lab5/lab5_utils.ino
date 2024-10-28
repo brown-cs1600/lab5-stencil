@@ -214,9 +214,9 @@ void displayGameOver(int l) {
 xyo randomLocationOrientation(int lxb, int uxb) {
   xyo retval;
   retval.x = random(lxb, uxb);
-  retval.y = random(0, 3);
+  retval.y = random(0, 4); // FIXED 10/27/24 from (0,3)
   // A hack, because enum "orientation" defines values from 0 to 3
-  retval.o = (orientation) random(0, 3);
+  retval.o = (orientation) random(0, 4); // FIXED 10/27/24 from (0,3)
   return retval;
 }
 
