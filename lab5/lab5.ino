@@ -10,15 +10,15 @@ void setup() {
   calibrate();
   // LAB STEP 4:
   // Change to 6, 7, 8, 9 based on calibration
-  capSensors[UP] = 8;
-  capSensors[RIGHT] = 6;
-  capSensors[DOWN] = 7;
-  capSensors[LEFT] = 9;
+  capSensors[UP] = 0;
+  capSensors[RIGHT] = 0;
+  capSensors[DOWN] = 0;
+  capSensors[LEFT] = 0;
   // Change based on calibration
-  thresholds[UP] = 34;
-  thresholds[DOWN] = 42;
-  thresholds[LEFT] = 34;
-  thresholds[RIGHT] = 48;
+  thresholds[UP] = 0;
+  thresholds[DOWN] = 0;
+  thresholds[LEFT] = 0;
+  thresholds[RIGHT] = 0;
 
   testCalibration();
 
