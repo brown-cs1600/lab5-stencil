@@ -34,8 +34,8 @@ typedef enum {
   s_INIT = 0,
   s_REG_CALC = 1,
   s_REG_WAIT = 2,
-  s_AVOID_CALC = 3,
-  s_AVOID_WAIT = 4,
+  s_AVOID_WAIT = 3,
+  s_AVOID_CALC = 4,
   s_GAME_OVER = 5,
   s_WIN = 6,
 } fsm_state;
