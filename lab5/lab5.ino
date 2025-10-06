@@ -1,127 +1,162 @@
-#include "lab5.h"
+#include "snake.h"
 
-// FSM variables
-/*
- File-static: "global" to the file only
-(to avoid spaghetti code by minimizing chance of other files changing these variables)
-Note that even safer would be to make these static in the updateFSM function,
-but then we wouldn't be able to expose them for unit testing (lab 6)
-*/
-static byte x, y;
-static orientation o;
-static int lxb, uxb, level, timeStep, savedClock, countdown;
+#define W 12
+#define H 8
 
 void setup() {
   Serial.begin(9600);
-  while (!Serial);
+  while(!Serial);
 
-  initializeSystem();
-
-  /*
-   * LAB STEP 4b
-   */
   calibrate();
+  // LAB STEP 4:
   // Change to 6, 7, 8, 9 based on calibration
-  capSensors[UP] = 0;
-  capSensors[RIGHT] = 0;
-  capSensors[DOWN] = 0;
-  capSensors[LEFT] = 0;
+  capSensors[UP] = 8;
+  capSensors[RIGHT] = 6;
+  capSensors[DOWN] = 7;
+  capSensors[LEFT] = 9;
   // Change based on calibration
-  thresholds[UP] = 0;
-  thresholds[RIGHT] = 0;
-  thresholds[DOWN] = 0;
-  thresholds[LEFT] = 0;
+  thresholds[UP] = 34;
+  thresholds[DOWN] = 42;
+  thresholds[LEFT] = 34;
+  thresholds[RIGHT] = 48;
 
-  /*
-   * LAB STEP 4c
-   */
   testCalibration();
 
-  /*
-   * LAB STEP 6
-   * Initialize all FSM variables
-   */
-  lxb = 0;
-  uxb = 0;
-  xyo randomXYO = randomLocationOrientation(lxb, uxb);
-  x = randomXYO.x;
-  y = randomXYO.y;
-  o = randomXYO.o;
-  level = 0;
-  timeStep = 0;
-  savedClock = 0;
-  countdown = 0;
-  // display something on the LCD
+  initializeSystem();
+}
+
+/*
+ * Computes whether the given x,y is out of bounds
+ * Playable game area is from (1, 1) (top-left) to (12, 8) (bottom-right)
+ */
+bool outOfBounds(byte x, byte y) {
+  return false; // LAB STEP 5
+}
+
+/*
+ * Computes new x,y one step in direction o from given x,y
+ */
+xy newPos(byte x, byte y, orientation o) {
+  // LAB STEP 5
+  switch(o) {
+    case NONE:
+    case UP:
+    case RIGHT:
+    case DOWN:
+    case LEFT:
+    default:
+    return {x, y};
+  }
+}
+
+/*
+ * Computes whether newO is a 90 degree turn from currO
+ * If either newO or currO is NONE, returns false
+ */
+bool turn(orientation currO, orientation newO) {
+  // LAB STEP 5
+  switch(currO) {
+    case UP:
+    case DOWN:
+    case LEFT:
+    case RIGHT:
+    default:
+    return false;
+  }
 }
 
 void loop() {
-  static state CURRENT_STATE = sDISP_COUNTDOWN;
-  updateInputs();
-  CURRENT_STATE = updateFSM(CURRENT_STATE, millis(), numButtonsPressed, lastButtonPressed);
+  // LAB STEP 6
+  /*
+  static full_state fs = {
+    {peek().x, peek().y, ___}, // snakeHead
+    randomFruit(), // fruit
+    ___, // step
+    ___, // length
+    millis(), // savedClock
+    0, // avoidSteps
+    s_INIT // state
+  };*/
+
+  // detect edge on button push
+  static bool prevButton = false;
+  bool curButton = false;
+  if (digitalRead(2) == HIGH) {
+    if (!prevButton) {
+      curButton = true;
+    }
+    prevButton = true;
+  } else {
+    prevButton = false;
+  }
+
+  // UNCOMMENT AFTER COMPLETING LAB STEP 6
+  //fs = updateFSM(fs, getControl(), curButton, millis());
+
+  static int loopCount = 5;
+  loopCount++;
+  if (loopCount == 6) { // toggle every 60ms
+    toggleFruit();
+    loopCount = 0;
+  }
   delay(10);
 }
 
 /*
- * LAB STEP 5
+ * Takes in a struct representing the current FSM state and state variables, as well as the three inputs
+ * and returns the updated FSM state and state variables
  */
-bool facingWall(byte x, byte y, byte o, int lxb, int uxb) {
-  return false;
-}
+full_state updateFSM(full_state currState, orientation control, bool button, unsigned long clock) {
+  xyo head = currState.head;
+  xy fruit = currState.fruit;
+  unsigned long step = currState.step;
+  byte snakeLength = currState.snakeLength;
+  unsigned long savedClock = currState.savedClock;
+  byte avoidSteps = currState.avoidSteps;
+  fsm_state state = currState.state;
 
-/*
- * LAB STEP 5
- */
-xy move(byte x, byte y, byte o) {
-  xy retval = {x, y};
-  return retval;
-}
+  full_state ret = currState; // FSM state and state variables to return. Default is to keep unchanged.
+  // LAB STEP 7
+  switch(state) {
+    case s_INIT:
+    if (control != NONE) { // t 1-2
+      ret.savedClock = clock;
+      xy newHead = newPos(head.x, head.y, control);
+      ret.head = {newHead.x, newHead.y, control};
+      ret.state = s_REG_CALC;
+    } 
+    break; // s_INIT
 
-/*
- * LAB STEP 7
- */
-state updateFSM(state curState, long mils, int numButtons, int lastButton) {
-  state nextState;
-  switch(curState) {
-  case sDISP_COUNTDOWN:
-    if ((mils - savedClock) >= 500 and countdown >= 0) { // transition 1-1
-      displayLevel(level, countdown);
-      countdown -= 1;
-      savedClock = mils;
-      nextState = sDISP_COUNTDOWN;
+    case s_REG_CALC:
+    if ((head.x != fruit.x || head.y != fruit.y) && !collision(head.x, head.y) &&
+        !outOfBounds(head.x, head.y)) { // t 2-3a
+      add(head.x, head.y);
+      remove();
+      ret.state = s_REG_WAIT;
     }
-    // add else if/else
-    break;
-  case sWAIT_AFTER_ROT:
-    if ((mils - savedClock) >= timeStep and numButtons > 0) { // transition 2-3 (a)
-      displayCursor(x, y, o, false, lxb, uxb);
-      lu shrunken = shrinkBounds(x, o, lxb, uxb);
-      lxb = shrunken.l;
-      uxb = shrunken.u;
-      xy newXY = move(x, y, o);
-      x = newXY.x;
-      y = newXY.y;
-      nextState = sMOV;
-    } else if ((mils - savedClock) >= timeStep and numButtons == 0) { // transition 2-3 (b)
-      displayCursor(x, y, o, false, lxb, uxb);
-      xy newXY = move(x, y, o);
-      x = newXY.x;
-      y = newXY.y;
-      nextState = sMOV;
-    } else {
-      nextState = sWAIT_AFTER_ROT;
-    }
-    break;
-  case sMOV:
-    break;
-  case sWAIT_AFTER_MOV:
-    break;
-  case sROT:
-    break;
-  case sWAIT_FOR_BUT:
-    break;
-  case sGAME_OVER: // no transitions from state 7
-    nextState = sGAME_OVER;
-    break;
+    // add else ifs for other transitions out of state 2
+    break; // s_REG_CALC
+
+    case s_REG_WAIT:
+    break; // s_REG_WAIT
+
+    case s_AVOID_WAIT:
+    break; // s_AVOID_WAIT
+
+    case s_AVOID_CALC:
+    break; // s_AVOID_CALC
+
+    case s_WIN:
+    // terminal state: no outgoing transitions
+    break; // s_WIN
+
+    case s_GAME_OVER:
+    // terminal state: no outgoing transitions
+    break; // s_GAME_OVER
+
+    default:
+    Serial.println("Invalid state");
+    while(true);
   }
-  return nextState;
+  return ret;
 }
