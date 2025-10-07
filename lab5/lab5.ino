@@ -156,7 +156,6 @@ full_state updateFSM(full_state currState, orientation control, bool button, uns
 
     default:
     Serial.println("Invalid state");
-    while(true);
   }
   return ret;
 }
