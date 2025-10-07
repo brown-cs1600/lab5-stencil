@@ -120,7 +120,6 @@ full_state updateFSM(full_state currState, orientation control, bool button, uns
   switch(state) {
     case s_INIT:
     if (control != NONE) { // t 1-2
-      ret.savedClock = clock;
       xy newHead = newPos(head.x, head.y, control);
       ret.head = {newHead.x, newHead.y, control};
       ret.state = s_REG_CALC;
