@@ -154,15 +154,8 @@ bool add(byte x, byte y) {
     snakeLen++;
     int idx = tail;
     for (int i = 0; i < snakeLen; i++) {
-      Serial.print(orderedSnake[(tail + i) % 96].x);
-      Serial.print(",");
-      Serial.print(orderedSnake[(tail + i) % 96].y);
-      Serial.print(" ");
       idx = (tail + i) % 96;
     }
-    Serial.println();
-    Serial.print("idx == head: ");
-    Serial.println(idx == head);
     return true;
   } else {
     Serial.println("ERROR: tried to add a pixel that is already used");
