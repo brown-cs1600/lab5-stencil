@@ -132,6 +132,7 @@ full_state updateFSM(full_state currState, orientation control, bool button, uns
         !outOfBounds(head.x, head.y)) { // t 2-3a
       add(head.x, head.y);
       remove();
+      ret.savedClock = clock;
       ret.state = s_REG_WAIT;
     }
     // add else ifs for other transitions out of state 2
