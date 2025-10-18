@@ -25,6 +25,22 @@ void initializeSystem() {
 }
 
 /*
+ * Re-initializes the system
+ */
+void reset() {
+  head = 95;
+  tail = 0;
+  snakeLen = 0;
+  inverted = false;
+  for (int i = 0; i < 3; i++) {
+    snakePixels[i] = 0;
+    frame[i] = 0;
+  }
+  xy newHead = randomPos();
+  add(newHead.x, newHead.y);
+}
+
+/*
  * Return a random x,y within the playable game area ((1, 1) to (12, 8))
  */
 #ifndef TESTING // unit testing turned off: normal behavior
@@ -62,16 +78,9 @@ xy randomFruit() {
     }
   }
 }
-#else // unit testing turned on: return pixel with mimimum y, then minimum x that isn't a collision
+#else // unit testing turned on: return {2, 1}
 xy randomFruit() {
-  for (byte y = 1; y <= 8; y++) {
-    for (byte x = 1; x <= 12; x++) {
-      if (!collision(x, y)) {
-        fruit = {x, y};
-        return {x, y};
-      }
-    }
-  }
+  return {2, 1};
 }
 #endif
 
@@ -118,21 +127,15 @@ void invert() {
 /*
  * Computes whether a piece of the snake body exists at the given x, y
  */
- #ifndef TESTING // unit testing turned off: regular behavior
 bool collision(byte x, byte y) {
   byte xyPos = 12 * (y - 1) + x - 1;
   return (snakePixels[xyPos / 32] & (0x1 << (31 - (xyPos % 32)))) != 0;
 }
-#else // unit testing turned on: collision is true when x == y
-bool collision(byte x, byte y) {
-  return x == y
-}
-#endif
-
 
 /*
  * Returns the current head of the orderedSnake array
  */
+#ifndef TESTING // unit testing turned off: normal behavior
 xy peek() {
   if (snakeLen != 0) {
     return orderedSnake[head];
@@ -141,6 +144,11 @@ xy peek() {
     while(true);
   }
 }
+#else // unit testing turned on: return {1, 1}
+xy peek() {
+  return {1, 1};
+}
+#endif
 
 /*
  * Adds a new head at coordinate x,y to orderedSnake and updates the display
