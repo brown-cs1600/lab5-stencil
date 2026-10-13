@@ -15,7 +15,7 @@ bool testTransition(full_state start,
                     full_state end,
                     state_inputs inputs,
                     bool verbos);
-                    
+
 /*        
  * Helper function for printing states
  */
@@ -62,7 +62,7 @@ char* o2str(orientation o) {
 
 /*
  * Given a start state (including state variables), inputs, tests that
- * updateFSM returns the correct end state and updates the state variables correctly
+ * updateSM returns the correct end state and updates the state variables correctly
  * returns true if this is the case (test passed) and false otherwise (test failed)
  * 
  * Need to use "verbos" instead of "verbose" because verbose is apparently a keyword
@@ -71,7 +71,7 @@ bool testTransition(full_state start,
                     full_state end,
                     state_inputs inputs,
                     bool verbos) {
-  full_state res = updateFSM(start, inputs.control, inputs.button, inputs.clock);
+  full_state res = updateSM(start, inputs.control, inputs.button, inputs.clock);
 
   bool passedTest =  (res.head.x == end.head.x &&
                       res.head.y == end.head.y &&

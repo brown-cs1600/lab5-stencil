@@ -88,7 +88,7 @@ void loop() {
   }
 
   // UNCOMMENT AFTER COMPLETING LAB STEP 6
-  //fs = updateFSM(fs, getControl(), curButton, millis());
+  //fs = updateSM(fs, getControl(), curButton, millis());
 
   static int loopCount = 5;
   loopCount++;
@@ -100,10 +100,10 @@ void loop() {
 }
 
 /*
- * Takes in a struct representing the current FSM state and state variables, as well as the three inputs
- * and returns the updated FSM state and state variables
+ * Takes in a struct representing the current SM state and state variables, as well as the three inputs
+ * and returns the updated SM state and state variables
  */
-full_state updateFSM(full_state currState, orientation control, bool button, unsigned long clock) {
+full_state updateSM(full_state currState, orientation control, bool button, unsigned long clock) {
   xyo head = currState.head;
   xy fruit = currState.fruit;
   unsigned long step = currState.step;
