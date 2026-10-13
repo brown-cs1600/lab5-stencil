@@ -15,6 +15,7 @@ bool testTransition(full_state start,
                     full_state end,
                     state_inputs inputs,
                     bool verbos);
+                    
 /*        
  * Helper function for printing states
  */

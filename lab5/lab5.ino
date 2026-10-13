@@ -1,20 +1,17 @@
 #include "snake.h"
 
-#define W 12
-#define H 8
-
 void setup() {
   Serial.begin(9600);
   while(!Serial);
 
-  calibrate();
+  calibrate(); // comment out when done calibrating
   // LAB STEP 4:
   // Change to 6, 7, 8, 9 based on calibration
   capSensors[UP] = 0;
   capSensors[RIGHT] = 0;
   capSensors[DOWN] = 0;
   capSensors[LEFT] = 0;
-  // Change based on calibration
+  // Change to threshold based on calibration
   thresholds[UP] = 0;
   thresholds[DOWN] = 0;
   thresholds[LEFT] = 0;

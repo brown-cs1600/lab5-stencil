@@ -1,5 +1,9 @@
 #include <CapacitiveSensor.h>
 
+#define W 12
+#define H 8
+#define AREA 96 // 8 * 12
+
 /*
  * Initialize capsensors on pins 6, 7, 8, 9 with 10 being the driving pin for all
  */

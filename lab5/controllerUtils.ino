@@ -1,56 +1,34 @@
 #define CTIME 8
+CapacitiveSensor* const caps[4] = {&s6, &s7, &s8, &s9};
+
 /*
- * Display capacitive sensor readings from pins 6-9 in serial monitor
+ * Displays capacitive sensor readings from pins 6-9 in serial monitor
  */
 void calibrate() {
   while(true) {
     Serial.println("Capacitive sensing:");
-    Serial.print("6: " );
-    Serial.println(s6.capacitiveSensorRaw(CTIME));
-    Serial.print("7:  ");
-    Serial.println(s7.capacitiveSensorRaw(CTIME));
-    Serial.print("8:  ");
-    Serial.println(s8.capacitiveSensorRaw(CTIME));
-    Serial.print("9:  ");
-    Serial.println(s9.capacitiveSensorRaw(CTIME));
+    for (int i = 0; i < 4; i++) {
+      Serial.print(i + 6);
+      Serial.print(": ");
+      Serial.println(caps[i]->capacitiveSensorRaw(CTIME));
+    }
     Serial.println();
     delay(300);
   }
 }
 
 /*
- * Display which sensor has been pressed on the gamepad, assuming capSensors[] and thresholds[]
+ * Displays which sensor has been pressed on the gamepad, assuming capSensors[] and thresholds[]
  * have been set up correctly
  */
 void testCalibration() {
-  String labels[4];
   // A hack, because enum "orientation" defines values from 0 to 3
-  labels[UP] = "UP pressed";
-  labels[LEFT] = "LEFT pressed";
-  labels[DOWN] = "DOWN pressed";
-  labels[RIGHT] = "RIGHT pressed";
+  const String labels[4] = {"UP pressed", "LEFT pressed", "DOWN pressed", "RIGHT pressed"};
 
   while(true) {
     // A hack, because enum "orientation" defines values from 0 to 3
     for(int i = 0; i < 4; i++) {
-      CapacitiveSensor* s;
-      switch(capSensors[i]) {
-        case 6:
-        s = &s6;
-        break;
-        case 7:
-        s = &s7;
-        break;
-        case 8:
-        s = &s8;
-        break;
-        case 9:
-        s = &s9;
-        break;
-        default:
-        break;      
-      }
-      if (s->capacitiveSensorRaw(CTIME) > thresholds[i]) {
+      if (caps[capSensors[i]-6]->capacitiveSensorRaw(CTIME) > thresholds[i]) {
         Serial.println(labels[i]);
       }
     }
@@ -59,32 +37,15 @@ void testCalibration() {
 }
 
 /*
- * Detects edges on each of the controller directions
- * Ignores multiple pushes (returns NONE);
+ * Detecst edges on each of the controller directions
+ * Ignores multiple pushes (returns NONE)
  */
 orientation getControl() {
   static bool prev[] = {false, false, false, false};
   bool pressed[] = {false, false, false, false};
   // A hack, because enum "orientation" defines values from 0 to 3
   for(int i = 0; i < 4; i++) {
-    CapacitiveSensor *s;
-    switch(capSensors[i]) {
-      case 6:
-      s = &s6;
-      break;
-      case 7:
-      s = &s7;
-      break;
-      case 8:
-      s = &s8;
-      break;
-      case 9:
-      s = &s9;
-      break;
-      default:
-      break;    
-    }
-    if (s->capacitiveSensorRaw(CTIME) > thresholds[i]) {
+    if (caps[capSensors[i]-6]->capacitiveSensorRaw(CTIME) > thresholds[i]) {
       if (!prev[i]) {
         pressed[i] = true;
       }
@@ -97,7 +58,7 @@ orientation getControl() {
   orientation ret = NONE;
   for (int i = 0; i < 4; i++) {
     if (pressed[i]) {
-      if (ret != NONE) {
+      if (ret != NONE) { // handle simultaneous pushes
         return NONE;
       } else {
         ret = (orientation) i;
