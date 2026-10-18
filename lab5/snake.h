@@ -65,6 +65,7 @@ orientation getControl();
  * Utilities to store and display snake
  */
 void initializeSystem();
+void reset();
 xy randomFruit();
 void toggleFruit();
 bool collision(byte x, byte y);
