@@ -23,7 +23,7 @@ void calibrate() {
  */
 void testCalibration() {
   // A hack, because enum "orientation" defines values from 0 to 3
-  const String labels[4] = {"UP pressed", "LEFT pressed", "DOWN pressed", "RIGHT pressed"};
+  const String labels[4] = {"UP pressed", "RIGHT pressed", "DOWN pressed", "LEFT pressed"};
 
   while(true) {
     // A hack, because enum "orientation" defines values from 0 to 3
